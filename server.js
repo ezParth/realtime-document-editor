@@ -6,7 +6,7 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-let documentContent;
+let documentContent = "";
 
 wss.on("connection", (ws) => {
     console.log("New client connected");
