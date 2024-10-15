@@ -13,7 +13,6 @@ app.use(express.static('public'));
 let documentContent = "";
 
 wss.on("connection", (ws) => {
-  const randomName = randomName();
   console.log("New client connected");
 
   ws.send(JSON.stringify({ type: "sync", content: documentContent }));
@@ -22,12 +21,17 @@ wss.on("connection", (ws) => {
     const data = JSON.parse(message);
 
     if (data.type === "update") {
-      documentContent = data.content;
+      const clientPatch = dmp.patch_make(documentContent, data.content);
+      console.log("#client patch:",clientPatch);
+      const newContent = dmp.patch_apply(clientPatch, documentContent)[0];
+      console.log("#newContent:",newContent);
+      documentContent = newContent;
+      console.log("#documentContent:",documentContent);
 
       wss.clients.forEach((client) => {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(
-            JSON.stringify({ type: "update", content: documentContent })
+            JSON.stringify({ type: "patch", patch: clientPatch })
           );
         }
       });
