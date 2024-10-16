@@ -22,11 +22,11 @@ wss.on("connection", (ws) => {
 
     if (data.type === "update") {
       const clientPatch = dmp.patch_make(documentContent, data.content);
-      console.log("#client patch:",clientPatch);
+      // console.log("#client patch:",clientPatch);
       const newContent = dmp.patch_apply(clientPatch, documentContent)[0];
-      console.log("#newContent:",newContent);
+      // console.log("#newContent:",newContent);
       documentContent = newContent;
-      console.log("#documentContent:",documentContent);
+      // console.log("#documentContent:",documentContent);
 
       wss.clients.forEach((client) => {
         if (client !== ws && client.readyState === WebSocket.OPEN) {

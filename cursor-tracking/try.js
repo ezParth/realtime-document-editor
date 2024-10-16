@@ -18,4 +18,7 @@ const originalText = "The quick brown fox jumps over the lazy dog.";
 
 const patch = dmp.patch_make(originalText, newText)
 const patchText = dmp.patch_toText(patch);
-console.log(patchText);
+// console.log(patchText);
+
+const ans = dmp.patch_apply("", newText)
+console.log(ans)

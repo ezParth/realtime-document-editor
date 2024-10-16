@@ -19,17 +19,23 @@ ws.onmessage = (event) => {
 
     if (data.type === 'patch') {
         const dmp = new diff_match_patch();
-        const patches = dmp.patch_fromText(data.patch);
-        console.log("data.patch ---> ", data.patch);
+        const patches = dmp.patch_fromText(data.patch);  // Deserialize patch from text
         const result = dmp.patch_apply(patches, currentDocument);
         currentDocument = result[0];
+        console.log("result --> ",result);
+        console.log("cd --> ",currentDocument);
         documentArea.value = currentDocument;
+        console.log(`Other user's cursor position: ${data.cursor}`);
     }
 };
 
+
 documentArea.addEventListener('input', () => {
     const content = documentArea.value;
-    ws.send(JSON.stringify({ type: "update", content: content }));
+
+    const cursorPosition = documentArea.selectionStart;
+    console.log("Cursor position:", cursorPosition);
+    ws.send(JSON.stringify({ type: "update", content: content, cursor:cursorPosition }));
 });
 
 ws.onclose = () => {
